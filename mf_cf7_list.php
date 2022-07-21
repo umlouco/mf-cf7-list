@@ -42,8 +42,23 @@ function mf_contact_list($atts){
     $upload_dir    = wp_upload_dir();
     $cfdb7_dir_url = $upload_dir['baseurl'].'/cfdb7_uploads';
 
-    $results    = $cfdb->get_results( "SELECT * FROM $table_name WHERE form_post_id = ".$a['form_post_id'], OBJECT );
-
+    $rows    = $cfdb->get_results( "SELECT * FROM $table_name WHERE form_post_id = ".$a['form_post_id'], OBJECT );
+    $max = 0; 
+    $max_key = 0; 
+    $fields = array(); 
+    if(!empty($rows)){
+        foreach($rows as $key => $r){
+            $data = unserialize($r->form_value); 
+            if(sizeof($data) > $max){
+                $max = sizeof($data);
+                $max_key = $key; 
+            }
+        }
+        $data = unserialize($rows[$max_key]->form_value); 
+        foreach($data as $key => $r){
+            $fields[] = $key; 
+        }
+    }
     ob_start();
     include(plugin_dir_path(__FILE__).'views/list.php'); 
     return  ob_get_clean();

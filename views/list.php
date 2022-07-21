@@ -1,30 +1,30 @@
-
-    <?php if(!empty($results)): ?>
+<?php if (!empty($rows)) : ?>
     <table class="table" id="mf-contact-list">
         <thead>
             <tr>
-                <?php $form_value = unserialize($results[0]->form_value); ?>
-                <?php foreach ($form_value as $key => $v) : ?>
-                    <?php if ($key != 'cfdb7_status') : ?>
-                        <?php $title = str_replace('-', ' ', $key); ?>
+                <?php foreach ($fields as $v) : ?>
+                    <?php if ($v != 'cfdb7_status') : ?>
+                        <?php $title = str_replace('-', ' ', $v); ?>
                         <th><?php echo ucwords($title); ?></th>
                     <?php endif; ?>
                 <?php endforeach; ?>
             </tr>
         </thead>
         <tbody>
-            <?php foreach ($results as $r) : ?>
+            <?php foreach ($rows as $r) : ?>
                 <tr>
                     <?php $form_value = unserialize($r->form_value); ?>
-                    <?php foreach ($form_value as $key => $v) : ?>
-                        <?php if ($key != 'cfdb7_status') : ?>
+                    <?php foreach ($fields as $v) : ?>
+                        <?php if ($v != 'cfdb7_status') : ?>
                             <td>
                                 <?php
-                                if (is_array($v)) {
-                                    echo implode(' | ', $v);
-                                } else {
-                                    echo $v;
-                                }
+                                if (!empty($form_value[$v])) {
+                                    if (is_array($form_value[$v])) {
+                                        echo implode(' | ', $form_value[$v]);
+                                    } else {
+                                        echo $form_value[$v];
+                                    }
+                                } 
                                 ?>
                             </td>
                         <?php endif; ?>
@@ -34,16 +34,16 @@
         </tbody>
     </table>
 
-<script>
-    jQuery(document).ready(function($) {
-        $('#mf-contact-list').DataTable({
-            "scrollX": true,
-            dom: 'Bfrtip',
-            buttons: [
-                'excelHtml5',
-                'csvHtml5',
-            ]
+    <script>
+        jQuery(document).ready(function($) {
+            $('#mf-contact-list').DataTable({
+                "scrollX": true,
+                dom: 'Bfrtip',
+                buttons: [
+                    'excelHtml5',
+                    'csvHtml5',
+                ]
+            });
         });
-    });
-</script>
+    </script>
 <?php endif; ?>
